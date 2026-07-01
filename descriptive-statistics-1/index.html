@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <title>Descriptive Statistics – I | Companion Resources | Dr. M. H. Dalvi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --ink:        #1a1208;
+      --paper:      #f5f0e8;
+      --cream:      #ede7d5;
+      --gold:       #b8860b;
+      --gold-light: #d4a017;
+      --rust:       #8b3a2a;
+      --muted:      #6b5f4e;
+      --border:     #c9bfa8;
+      --white:      #fdfaf4;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Serif 4', Georgia, serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.5;
+    }
+
+    /* ── LOCK SCREEN ── */
+    #lockedView {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      background: #1a3a2a;
+      color: var(--paper);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #lockedView::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 10% 80%, rgba(34,100,60,0.35) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 90% 20%, rgba(184,134,11,0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .lock-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 440px;
+      width: 100%;
+    }
+
+    .lock-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 16px;
+    }
+
+    .lock-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .lock-subtitle {
+      font-size: 0.85rem;
+      color: var(--border);
+      margin-bottom: 48px;
+      letter-spacing: 0.04em;
+    }
+
+    .lock-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(184,134,11,0.25);
+      padding: 36px 32px;
+      text-align: left;
+    }
+
+    .lock-box label {
+      display: block;
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+
+    #codeInput {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(184,134,11,0.3);
+      color: var(--paper);
+      font-family: 'Source Serif 4', serif;
+      font-size: 1rem;
+      letter-spacing: 0.06em;
+      outline: none;
+      margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+
+    #codeInput:focus { border-color: var(--gold); }
+
+    #unlockBtn {
+      width: 100%;
+      padding: 13px;
+      background: var(--gold);
+      color: var(--ink);
+      border: none;
+      font-family: 'Source Serif 4', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    #unlockBtn:hover { background: var(--gold-light); }
+
+    #errorMsg {
+      margin-top: 14px;
+      font-size: 0.82rem;
+      color: #e88;
+      min-height: 1.2em;
+    }
+
+    .lock-hint {
+      margin-top: 28px;
+      font-size: 0.78rem;
+      color: rgba(245,240,232,0.4);
+      line-height: 1.6;
+    }
+
+    /* ── UNLOCKED VIEW ── */
+    #unlockedView { display: none; }
+
+    .resource-header {
+      background: #1a3a2a;
+      color: var(--paper);
+      padding: 40px 60px;
+      position: relative;
+    }
+
+    .resource-header::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--gold) 30%, var(--gold) 70%, transparent 100%);
+      opacity: 0.35;
+    }
+
+    .resource-header-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 10px;
+    }
+
+    .resource-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+
+    .resource-header p {
+      font-size: 0.88rem;
+      color: var(--border);
+    }
+
+    .resource-body {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+
+    .chapter-block {
+      margin-bottom: 64px;
+      padding-bottom: 64px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .chapter-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+    .chapter-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .chapter-block h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      margin-bottom: 16px;
+      color: var(--ink);
+    }
+
+    .chapter-block p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+
+    .resource-embed {
+      margin-bottom: 20px;
+    }
+
+    .resource-embed iframe {
+      width: 100%;
+      height: 500px;
+      border: none;
+      border-radius: 4px;
+      display: block;
+    }
+
+    .embed-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .placeholder-embed {
+      width: 100%;
+      height: 200px;
+      background: var(--cream);
+      border: 2px dashed var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+      padding: 20px;
+      border-radius: 4px;
+    }
+
+    footer {
+      background: var(--ink);
+      color: var(--border);
+      text-align: center;
+      padding: 32px 40px;
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+    }
+
+    footer .footer-name {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--gold-light);
+      margin-bottom: 6px;
+    }
+
+    footer p { opacity: 0.5; }
+
+    @media (max-width: 600px) {
+      .resource-header { padding: 32px 24px; }
+      .resource-body { padding: 40px 20px; }
+      .resource-embed iframe { height: 340px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── LOCKED STATE ── -->
+<div id="lockedView">
+  <div class="lock-inner">
+    <p class="lock-eyebrow">Dr. Madhukar H. Dalvi</p>
+    <h1 class="lock-title">Descriptive Statistics – I</h1>
+    <p class="lock-subtitle">Companion Resources</p>
+
+    <div class="lock-box">
+      <label for="codeInput">Enter your access code</label>
+      <input type="text" id="codeInput" placeholder="Access code" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <button id="unlockBtn">Unlock Resources</button>
+      <p id="errorMsg"></p>
+    </div>
+
+    <p class="lock-hint">The access code is printed inside your copy of the book.<br>Contact <a href="mailto:mhdalvi7@gmail.com" style="color:var(--gold-light);">mhdalvi7@gmail.com</a> if you need assistance.</p>
+  </div>
+</div>
+
+<!-- ── UNLOCKED STATE ── -->
+<div id="unlockedView">
+
+  <div class="resource-header">
+    <p class="resource-header-eyebrow">Companion Resources &nbsp;·&nbsp; Dr. Madhukar H. Dalvi</p>
+    <h1>Descriptive Statistics – I</h1>
+    <p>Supplementary materials to accompany the textbook &nbsp;·&nbsp; 2026</p>
+  </div>
+
+  <div class="resource-body">
+
+    <!-- PLACEHOLDER CHAPTERS — Replace with actual chapter structure and Drive file IDs -->
+
+    <div class="chapter-block">
+      <p class="chapter-label">Chapter 1</p>
+      <h2>[Chapter Title — To Be Added]</h2>
+      <p>[Explanatory notes or context from Dr. Dalvi for this chapter's resources will appear here.]</p>
+      <div class="resource-embed">
+        <p class="embed-label">Resource 1</p>
+        <!-- PLACEHOLDER: Replace FILE_ID with actual Google Drive file ID -->
+        <div class="placeholder-embed">
+          Drive resource will appear here.<br>
+          Replace with: &lt;iframe src="https://drive.google.com/file/d/<strong>[FILE_ID]</strong>/preview" ...&gt;
+        </div>
+      </div>
+    </div>
+
+    <div class="chapter-block">
+      <p class="chapter-label">Chapter 2</p>
+      <h2>[Chapter Title — To Be Added]</h2>
+      <p>[Explanatory notes or context from Dr. Dalvi for this chapter's resources will appear here.]</p>
+      <div class="resource-embed">
+        <p class="embed-label">Resource 1</p>
+        <!-- PLACEHOLDER: Replace FILE_ID with actual Google Drive file ID -->
+        <div class="placeholder-embed">
+          Drive resource will appear here.<br>
+          Replace with: &lt;iframe src="https://drive.google.com/file/d/<strong>[FILE_ID]</strong>/preview" ...&gt;
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /resource-body -->
+
+  <footer>
+    <p class="footer-name">Dr. Madhukar H. Dalvi</p>
+    <p>Descriptive Statistics – I &nbsp;·&nbsp; Companion Resources</p>
+    <p style="margin-top:8px;">&copy; <span id="yr"></span> Dr. Madhukar H. Dalvi. All rights reserved.</p>
+  </footer>
+
+</div><!-- /unlockedView -->
+
+<script>
+  const PASSPHRASE = 'MHDALVI/DESCSTATS26';
+
+  document.getElementById('unlockBtn').addEventListener('click', unlock);
+  document.getElementById('codeInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') unlock();
+  });
+
+  function unlock() {
+    const input = document.getElementById('codeInput').value.trim().toUpperCase();
+    if (input === PASSPHRASE) {
+      document.getElementById('lockedView').style.display = 'none';
+      document.getElementById('unlockedView').style.display = 'block';
+      sessionStorage.setItem('dalvi_desc_stats_1_access', '1');
+    } else {
+      document.getElementById('errorMsg').textContent =
+        'Incorrect code. Please check the code printed inside your book.';
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', function() {
+    if (sessionStorage.getItem('dalvi_desc_stats_1_access') === '1') {
+      document.getElementById('lockedView').style.display = 'none';
+      document.getElementById('unlockedView').style.display = 'block';
+    }
+    document.getElementById('yr').textContent = new Date().getFullYear();
+  });
+</script>
+</body>
+</html>

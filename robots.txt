@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /descriptive-statistics-1/
+Disallow: /mathematical-statistical-techniques-1/
