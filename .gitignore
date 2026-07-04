@@ -1,0 +1,12 @@
+# Reference files — local only, never commit
+_reference/
+Dr_Madhukar_Dalvi_CV.pdf
+CLAUDE.md
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
